@@ -1,25 +1,40 @@
-import { Button } from '@material-ui/core';
-import React from 'react';
-import { auth, provider } from "../firebase";
+import React from 'react'
 import "../Login.css";
+import { Button } from "@material-ui/core";
+import { auth, provider } from "../firebase";
+import { useStateValue } from "../StateProvider";
+import { actionTypes } from "../reducer";
 
-function Login() {
-    const signIn = function () {
+const Login = () => {
+    const [state, dispatch] = useStateValue();
+
+    const signIn = () => {
         auth.signInWithPopup(provider)
-            .then(result => {
-                console.log(result);
-            }).catch(err => alert(err.message));
-    }
+            .then((result) => {
+                dispatch({
+                    type: actionTypes.SET_USER,
+                    user: result.user,
+                });
+            })
+            .catch((error) => {
+                alert(error.message);
+            });
+    };
+
     return (
-        <div className='login'>
-            <div className='login__container'>
-                <img src="https://cdn-icons-png.flaticon.com/512/732/732245.png" alt="Slack logo" />
-                <h1>Sign in to Developer's Club</h1>
-                <p>developerclub.slack.com</p>
+        <div className="login" >
+            <div className="login__container">
+                <img
+                    src="https://a.slack-edge.com/80588/marketing/img/icons/icon_slack_hash_colored.png"
+                    alt=""
+                />
+
+                <h1>Sign in to Tejas Server</h1>
+                <p>tejas-dev.slack.com</p>
                 <Button onClick={signIn}>Sign in with Google</Button>
             </div>
-        </div>
+        </div >
     )
 }
 
-export default Login 
+export default Login
